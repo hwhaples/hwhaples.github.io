@@ -1,0 +1,19 @@
+<meta charset="utf-8" emacsmode="-*- markdown -*-">
+
+**Hunter Whaples**
+    <span style="font-variant:small-caps;">| [home](index.md.html) | [engineering](engineering.md.html) | [humanities](humanities.md.html) | [fun](fun.md.html) |</span>
+                            
+Welcome to my website. It's not much now, but come back later and there will be more!
+
+# Section One
+
+
+
+
+
+
+
+
+
+
+<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js" charset="utf-8"></script><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
