@@ -1,0 +1,135 @@
+<meta charset="utf-8" lang="en">
+
+<div style="text-align: right; line-height: 1.9">
+    E85: Reading 6 <br>
+    Section 4.1 - 4.3 <br>
+    tl;dr version <br>
+    June 10, 2020 <br>
+</div>
+
+<p style="text-decoration: underline;">
+    4.1 Introduction to Hardware Description Languages
+</p>
+
+**HDLs** or a hardware description language is the method to interface the intended logic for a computer aided design software to optimize the specific gates. The two most famous HDLs are VHDL and **SystemVerilog**. For the rest of these summaries, I will focus on SystemVerilog implementation.
+
+A *module* is hardware with inputs and outputs. We may describe modules as:
+    - **Behavioral**: Describes what a module does.
+    - **Structural**: Describes how the module is built from simpler pieces.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+module sillyfunction(input logic a, b, c, 
+                      output logic y);
+    assign y = ~a & ~b & ~c |
+                a & ~b & ~c |
+                a & ~b &  c;
+
+endmodule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This code implements the following logic:
+    $$ y = \overline{a} \overline{b} \overline{c} + a \overline{b} \overline{c} + a \overline{b} c $$
+
+The takeaways are:
+    - module begins with its name followed by the input and output variables. 
+    - the assign statement describes the combinational logic.
+    - ~ is NOT, & is AND, | is OR
+
+**Why do I even care?**
+The two purposes of HDLs are *simulation* and *synthesis*. Simulation sees if logic outputs are expected from given inputs. Synthesis transform the performance into logic gates.
+
+Logic synthesis turns HDL code into a netlist to describe the hardware. This is the purpose of HDLs that make them different from programming languages. Not all commands can be synthesized (like print statements). Our focus will be on the ones that are.
+
+To be effective when working with HDLs, draw your system as combinational logic, registers, and finite state machines. Show the connection between these parts and understand their connections before going straight to an HDL.
+
+<span class="pagebreak"></span>
+
+The best way to learn an HDL is through practice. We will learn specific ways of describing classes of logic (idioms), learn to write each block, and then learn to put the blocks together. 
+
+<p style="text-decoration: underline;">
+    4.2 Combinational Logic
+</p>
+
+**Bitwise Operators**
+Bitwise operators act on single-bit signals or in multibit busses. Below shows a four inverters connected to four bit busses.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+module inv(input logic[3:0]a,
+           output logic[3:0]y);
+    
+    assign y = ~a;
+endmodule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There was an arbitrary choice in describing the bus. a[3:0] is a 4 bit bus with the bits from most significant to least significant  are a[3], a[2], a[1], a[0]. This is called **little-endian** order because the least significant bit has the smallest bit number. The alternative is **big-endian** a[0:3]. You must be consistent. We use little endian [N-1:0].
+
+**Logic Gates Example**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+module gates(input logic [3:0]a,b,
+             output logic [3:0] y1, y2, y3, y4, y5);
+    /*five different two input logic gates acting on 4-bit busses */
+    assign y1 = a & b;    //AND
+    assign y2 = a | b;    //OR
+    assign y3 = a ^ b;    //XOR
+    assign y4 = ~(a & b)  //NAND
+    assign y5 = ~(a | b)  //NOR
+endmodule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Things like ^ are called *operators*. Things like a, b, y1 are called *operands* and a complete command is called a *statement.* Above shows how to do comments, SystemVerilog is not picky about whitespace. Use consistent formatting and do not start module or signal names with a number.
+
+**Reduction Operators**
+These operators are a shorthand to imply a multiple-input gate acting on a single bus.  The example below shows & on an 8 input bus, but can be done similarly for all logic.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+module and8(input logic[7:0]a,
+            output logic    y);
+    assign y = &a;
+    // &a is easier to write than
+    // assign y = a[7] & a[6] & a[5] & a[4] ...
+endmodule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Conditional Operator**
+Conditional assignments select the output from among alternatives based on an input called the *condition*. The conditional operator (?) chooses, based on the first expression, between a second and third expression. If the condition is 1, the operator chooses the second expression. If the condition is 0, the operator chooses the third expression.
+
+This is useful for describing a multiplexer because based on the first input it selects between two others. Below shows a 2:1 multiplexer with 4-bit inputs and outputs.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+module mux2(input  logic[3:0]d0, d1,
+            input  logic     s,
+            output logic[3:0]y);
+
+    assign y = s ? d1 : d0;
+endmodule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If s is 1, then y = d1. If s is 0 , then y = d0. (? is a *ternary operator* because it takes three inputs - just like in many other programming languages.)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+module mux4(input  logic[3:0]d0, d1, d2, d3
+            input  logic[1:0]s,
+            output logic [3:0]y);
+    assign y = s[1] ? (s[0] ? d3 : d2)
+                    : (s[0] ? d1 : d0);
+endmodule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Internal Variables**
+
+If s[1] is 1, then the multiplexer chooses the first expression, (s[0] ? d3 : d2). This epxression in turn chooses either d3 or d2 based on s[0](y=d3 if s[0] is 1 and d2 is s[0] if s[0] is 0).
+
+<p style="text-decoration: underline;">
+    4.3 Structural Modeling
+</p>
+
+
+<script src="markdeep-thesis/lib/bindery/2.2.9/bindery.min.js"></script>
+<script>
+    markdeepThesisOptions = {
+        view: "print",
+        titlePage: titlePage,
+        fontSize: 10.5,
+        markdeepDiagramScale: 0.8
+    }
+</script>
+<script src="markdeep-thesis/markdeep-thesis.js"></script>
+<script src="markdeep-thesis/lib/markdeep/1.09/markdeep.min.js" charset="utf-8"></script>
