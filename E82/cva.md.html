@@ -1,0 +1,65 @@
+<head>
+    <meta charset="utf-8" emacsmode="-*- markdown -*-">
+    <? 'header.php'; ?>
+</head>
+**Control Volume Analysis**
+    <span style="font-variant:small-caps;">| [home](../index.md.html) | [engineering](../engineering.md.html) | [humanities](../humanities.md.html) | [fun](../fun.md.html) |</span>
+
+# Nozzles
+What is a nozzle, and what does it do? How can I use thermodynamics to model nozzles?
+
+![](E82_images/nozzle1.jpg width="30%" border="0" align="center")
+
+## Background
+A nozzle is a common and simple everyday device that I’m sure you have interacted with before. In the most general sense, a nozzle changes the direction or characteristics of a fluid flow – normally velocity – as it enters or exits a vessel or pipe.
+
+Most commonly a nozzle is a tube or pipe of varying cross-sectional area. Narrowing or widening the pipe can control flow rate, speed, direction, mass flow, shape, or pressure of the stream that emerges. When you think of a nozzle think of the end of hose which accelerates the water to much faster speeds than how it travels inside the hose.
+
+Since energy is conserved, this increased velocity comes as a result of a pressure drop across the nozzle. On a flow diagram, a nozzle looks like:
+
+![](E82_images/nozzle2.jpg border="0" align="center")
+
+A nozzle that has a larger opening at entrance than at exit is known as a diffuser.
+
+## Example Problem: Isentropic Nozzle
+Steam enters a nozzle at 3000 kPa and 450 C at negligible velocity and discharges at a pressure of 2400 kPa. If we imagine that the expansion is isentropic, what is the exit velocity and what is the cross-sectional area at the nozzle throat for a flow rate of 1 kg/s?
+____________________________
+First, make some common assumptions about nozzles:
+
+    - Due to the high velocity of fluid, there is no heat transfer, **Q = 0**
+    - There is no shaft motion or current, **W = 0**
+    - Elevation changes are negligible, $ \Delta PE $
+    - Mass at the inlet equals mass at the outlet, $ m_{1} = m_{2} $
+
+Begin with the first law of thermodynamics:
+
+$$ Q + W = m (\Delta h +  \Delta \frac{v^{2}}{2} + \Delta g z )$$
+
+Applying the assumptions above, this simplifies quite a bit to:
+
+$$ H_{1} + \frac{v_{1}^{2}}{2} = H_{2} + \frac{v_{2}^{2}}{2} $$
+
+If $ V_{1} = 0 $ , as stated by the problem statement, then this can reduced down to:
+
+$$ H_{1} = H_{2} + \frac{v_{2}^{2}}{2} $$
+
+Using a [steam table](E82/E82_code/ThermodynamicTablesExcel.xlsx), we can extract the following values. **What property gives us a second look up value for the outlet, Pressure and ... ?**
+
+Inlet             |                | Outlet           |              |
+------------------|----------------|------------------|--------------|
+T (C)             | 450            | T(C)             | 414.6        |
+P (kPa)           | 3000           | P (kPa)          | 2.4          |
+v ($m^{2}$ / kg)  | 0.1079         | v ($m^{2}$ / kg) | 0.1284       |
+H (kJ / kg)       | 3344           | H (kJ / kg)      | 3274         |
+S (kJ / kg K)     | 7.083          | S (kJ / kg K)    | 7.083        |
+
+Solving the above equation for velocity, we can see:
+
+$$ V_{2} = \sqrt{2 (H_{1} - H_{2})} = 374 m/s $$ 
+
+Since the mass flow rate at inlet and outlet must be equal - no accumulation in the nozzle - we can solve for cross-sectional area with the following relation to density.
+
+$$ m_{1} = m_{2} = \frac{A_{2} V_{2}}{v_{2}} $$
+
+We find that the area must be $ 3.43 cm^{2} $. Be sure to check your units!
+<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js" charset="utf-8"></script><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
