@@ -1,0 +1,138 @@
+---
+---
+
+// Variables
+@import "utilities/variables";
+
+// Utility styles
+@import "utilities/mixins";
+@import "utilities/utils";
+@import "utilities/syntax-highlighting";
+@import "utilities/animations";
+
+// Core
+@import "base/normalize";
+@import "base/global";
+@import "base/layout";
+@import "base/typography";
+
+// Components
+@import "components/navigation";
+@import "components/pagination";
+@import "components/code";
+@import "components/message";
+
+// Pages
+@import "pages/landing";
+@import "pages/posts";
+
+/** 
+ * Portfolio grid **********************************************************
+*/
+// Nicolas Gallagher's micro clearfix hack
+// http://nicolasgallagher.com/micro-clearfix-hack/
+.clearfix:before,
+.clearfix:after {
+content: " ";
+display: table;
+}
+.clearfix:after {
+clear: both;
+}
+.project {
+width: 33.33%;
+height: 250px;
+float: left;
+vertical-align: middle;
+box-sizing: border-box;
+padding: 10px;
+}
+.thumbnail{
+width: 100%;
+height: 230px;
+overflow: hidden;
+}
+.thumbnail img{
+width: 100%;
+height: 230px;
+position: relative;
+left: 0%;
+top: 0%;
+}
+.thumbnail a{
+float: left;
+position: relative;
+width: 100%;
+height: 230px;
+}
+.thumbnail a span {
+display: none;
+position: absolute;
+top: 0;
+left: 0;
+bottom: 0;
+right: 0;
+background: rgba(0,0,0,0.2);
+color: rgba(0,0,0,0.1);
+padding: 40px;
+text-align: center;
+}
+.thumbnail a:hover span {
+display: block;
+}
+/** 
+ * Portfolio pages **********************************************************
+*/
+.blankbox{
+background:#ddd;
+}
+.img_row{
+height: 275px;
+width: 100%;
+overflow: hidden;
+box-sizing:border-box;
+padding: 5px;
+}
+.col{ 
+width: 100%;
+height: 100%;
+float: left;
+object-fit: cover;
+box-sizing:border-box;
+padding: 5px;
+}
+.right{
+float: right;
+}
+.one {
+width:33.33%;
+}
+.two {
+width: 66.66%;
+}
+.three{
+width: 100%;
+}
+.caption{
+height: 100%;
+color: rgb(0,0,0);
+text-align: center;
+vertical-align: middle;
+font-size: 12px;
+}
+.bg_main {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    background:rgb(255,255,255);
+    background: transparent\9;
+    background:rgba(255,255,255,0.85);        
+    z-index: -1;
+}
+.overlay {
+    color: whitesmoke
+}
