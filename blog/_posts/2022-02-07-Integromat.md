@@ -54,18 +54,6 @@ So, what’s next? I’m leaving it as is for now, but I could easily see two gr
 
 
 
-
-In the context of COVID, I used my own home to install my work. Driven by how periodic, yet disrupting working from home has been, I selected a message that I thought would be widely reaching in general as well as within my own family.
-
-
-<a href="https://drive.google.com/drive/folders/1JpDboZv8ro50OMgAN9OORKLnpEj3RKpy?usp=sharing">Click here for more pictures!</a>
-
-
-
-<center><em>There's only one checkbox left on the to-do, I know that you'll pull through.</em></center>
-
-
-
 <!--
 <div class="message">
   Howdy! This is an example blog post that shows several types of HTML content supported in this theme.
