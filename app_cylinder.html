@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Tilted Cylinder Intersection</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f0f5;
+            color: #222;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 1000px;
+            gap: 20px;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 22px;
+            text-align: center;
+        }
+
+        .control-group {
+            background: #f9f9fb;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .slider-control {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .slider-control label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .slider-readout {
+            font-weight: normal;
+            font-size: 14px;
+            color: #666;
+        }
+
+        input[type=range] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .math-display {
+            background: #eee;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+            grid-column: 1 / -1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .vis-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .canvas-wrapper {
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+            background: #fff;
+        }
+
+        .canvas-label {
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #444;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .vis-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-container">
+        <h1>Exploring Tilted Cylinder Intersection</h1>
+
+        <div class="control-group">
+            <div class="slider-control">
+                <label for="thetaSlider">Global Rotation (θ): <span class="slider-readout"><span
+                            id="thetaVal">0</span>°</span></label>
+                <input type="range" id="thetaSlider" min="0" max="360" value="0" step="1">
+            </div>
+            <div class="slider-control">
+                <label for="alphaSlider">Cylinder Tilt (α): <span class="slider-readout"><span
+                            id="alphaVal">30</span>°</span></label>
+                <input type="range" id="alphaSlider" min="1" max="75" value="30" step="1">
+            </div>
+            <div class="slider-control">
+                <label for="hSlider">Plane Height (h): <span class="slider-readout"><span id="hVal">5.0</span>
+                        units</span></label>
+                <input type="range" id="hSlider" min="1" max="15" value="5" step="0.1">
+            </div>
+            <div class="slider-control">
+                <label for="rSlider">Cylinder Radius (r): <span class="slider-readout"><span id="rVal">2.0</span>
+                        units</span></label>
+                <input type="range" id="rSlider" min="0.5" max="5" value="2" step="0.1">
+            </div>
+
+            <div class="math-display">
+                <span>Center (X<sub>c</sub>, Y<sub>c</sub>): (<span id="xcVal">0.00</span>, <span
+                        id="ycVal">0.00</span>)</span>
+                <span>Semi-major Axis (a): <span id="aVal">0.00</span></span>
+                <span>Semi-minor Axis (b): <span id="bVal">0.00</span></span>
+            </div>
+        </div>
+
+        <div class="vis-container">
+            <div class="canvas-wrapper" style="height: 450px;">
+                <div class="canvas-label">3D Visual (Cylinder & Plane)</div>
+                <div id="canvas3d_container"></div>
+            </div>
+            <div class="canvas-wrapper" style="height: 450px;">
+                <div class="canvas-label">2D Top View (Global Orbit)</div>
+                <canvas id="canvas2d"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // HTML Elements
+        const sTheta = document.getElementById('thetaSlider'); const vTheta = document.getElementById('thetaVal');
+        const sAlpha = document.getElementById('alphaSlider'); const vAlpha = document.getElementById('alphaVal');
+        const sH = document.getElementById('hSlider'); const vH = document.getElementById('hVal');
+        const sR = document.getElementById('rSlider'); const vR = document.getElementById('rVal');
+
+        const dXc = document.getElementById('xcVal'); const dYc = document.getElementById('ycVal');
+        const dA = document.getElementById('aVal'); const dB = document.getElementById('bVal');
+
+        // 2D Canvas Setup
+        const canvas2d = document.getElementById('canvas2d');
+        const ctx2d = canvas2d.getContext('2d');
+        function resizeCanvas2d() {
+            const wrapper = canvas2d.parentElement;
+            canvas2d.width = wrapper.offsetWidth;
+            canvas2d.height = wrapper.offsetHeight;
+        }
+        resizeCanvas2d();
+        window.addEventListener('resize', () => { resizeCanvas2d(); resizeCanvas3d(); updateAll(); });
+
+        // ==========================================
+        // Three.js (3D Visualization) Setup
+        // ==========================================
+        const container3d = document.getElementById('canvas3d_container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf4f4f9);
+
+        const camera3d = new THREE.PerspectiveCamera(50, container3d.offsetWidth / 450, 0.1, 1000);
+        camera3d.position.set(15, 12, 18);
+        camera3d.lookAt(0, 5, 0);
+
+        const renderer3d = new THREE.WebGLRenderer({ antialias: true });
+        renderer3d.setSize(container3d.offsetWidth, 450);
+        container3d.appendChild(renderer3d.domElement);
+
+        const globalAxes = new THREE.AxesHelper(15);
+        scene.add(globalAxes);
+
+        const planeGeometry = new THREE.PlaneGeometry(35, 35);
+        const planeMaterial = new THREE.MeshBasicMaterial({ color: 0x4488ff, side: THREE.DoubleSide, transparent: true, opacity: 0.3 });
+        const horizontalPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+        horizontalPlane.rotation.x = -Math.PI / 2;
+        scene.add(horizontalPlane);
+
+        const cylinderGroup = new THREE.Group();
+        scene.add(cylinderGroup);
+
+        // Initial base cylinder with radius 1 (we will scale it dynamically)
+        const initialHeight = 30;
+        const cylinderGeometry = new THREE.CylinderGeometry(1, 1, initialHeight, 64, 1, true);
+        const cylinderMaterial = new THREE.MeshPhongMaterial({ color: 0xff8800, transparent: true, opacity: 0.4, side: THREE.DoubleSide, shininess: 80 });
+        const cylinderMesh = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+        cylinderGeometry.translate(0, initialHeight / 2, 0); // Pivot at bottom center
+        cylinderGroup.add(cylinderMesh);
+
+        const intersectionMaterial = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
+        let intersectionLineMesh = null;
+
+        const ambientLight = new THREE.AmbientLight(0xaaaaaa);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(10, 20, 10).normalize();
+        scene.add(directionalLight);
+
+        function resizeCanvas3d() {
+            const wrapper3d = container3d.parentElement;
+            camera3d.aspect = wrapper3d.offsetWidth / 450;
+            camera3d.updateProjectionMatrix();
+            renderer3d.setSize(wrapper3d.offsetWidth, 450);
+        }
+
+        // ==========================================
+        // The Update Engine
+        // ==========================================
+        function updateAll() {
+            const theta_rad = sTheta.value * (Math.PI / 180);
+            const alpha_rad = sAlpha.value * (Math.PI / 180);
+            const h = parseFloat(sH.value);
+            const r = parseFloat(sR.value);
+
+            vTheta.innerText = sTheta.value;
+            vAlpha.innerText = sAlpha.value;
+            vH.innerText = h.toFixed(1);
+            vR.innerText = r.toFixed(1);
+
+            // --- MATH ENGINE ---
+            const b = r;
+            const a = r / Math.cos(alpha_rad);
+
+            const R_revolution = h * Math.tan(alpha_rad);
+            const Xc = R_revolution * Math.cos(theta_rad);
+            const Yc = R_revolution * Math.sin(theta_rad);
+
+            dXc.innerText = Xc.toFixed(2);
+            dYc.innerText = Yc.toFixed(2);
+            dA.innerText = a.toFixed(2);
+            dB.innerText = b.toFixed(2);
+
+            const numPoints = 120;
+            const points2D = [];
+            const points3D = [];
+
+            for (let i = 0; i <= numPoints; i++) {
+                const phi = i * (2 * Math.PI / numPoints);
+
+                // Unrotated ellipse points relative to center
+                let ex = a * Math.cos(phi);
+                let ey = b * Math.sin(phi);
+
+                // Rotate the ellipse to point in the direction of the global rotation
+                const rx = ex * Math.cos(theta_rad) - ey * Math.sin(theta_rad);
+                const ry = ex * Math.sin(theta_rad) + ey * Math.cos(theta_rad);
+
+                // Global 2D Math Coordinates
+                const globalX = rx + Xc;
+                const globalY = ry + Yc;
+                points2D.push({ x: globalX, y: globalY });
+
+                // Mapping to Three.js: Math(X, Y, Z_height) -> Three(X, -Z, Y_height)
+                points3D.push(new THREE.Vector3(globalX, h, -globalY));
+            }
+
+            // --- UPDATE 3D VISUALS ---
+            horizontalPlane.position.y = h;
+
+            // Apply scaling for radius
+            cylinderMesh.scale.set(r, 1, r);
+
+            // Proper coordinate mapping for 3D alignment
+            cylinderGroup.rotation.y = theta_rad;
+
+            // Tilt the cylinder so it initially leans along the +X axis
+            cylinderMesh.rotation.z = -alpha_rad;
+
+            if (intersectionLineMesh) {
+                scene.remove(intersectionLineMesh);
+                intersectionLineMesh.geometry.dispose();
+            }
+
+            const geometry3D = new THREE.BufferGeometry().setFromPoints(points3D);
+            intersectionLineMesh = new THREE.Line(geometry3D, intersectionMaterial);
+            scene.add(intersectionLineMesh);
+
+            renderer3d.render(scene, camera3d);
+
+            // --- UPDATE 2D VISUALS (Global Orbit) ---
+            ctx2d.fillStyle = '#f9f9fb';
+            ctx2d.fillRect(0, 0, canvas2d.width, canvas2d.height);
+
+            const w2d = canvas2d.width;
+            const h2d = canvas2d.height;
+            const centerX = w2d / 2;
+            const centerY = h2d / 2;
+
+            // Dynamic scaling
+            const maxExtent = R_revolution + a;
+            const viewSize = Math.max(10, maxExtent * 1.3);
+            const scale = Math.min(w2d, h2d) / 2 / viewSize;
+
+            // Draw Grid and Axes
+            ctx2d.beginPath();
+            ctx2d.strokeStyle = '#ddd';
+            ctx2d.lineWidth = 1;
+            ctx2d.moveTo(0, centerY); ctx2d.lineTo(w2d, centerY); // X-axis
+            ctx2d.moveTo(centerX, 0); ctx2d.lineTo(centerX, h2d); // Y-axis
+            ctx2d.stroke();
+
+            // [NEW] Draw the transparent blue circle
+            const blueCircleRadius = b - R_revolution;
+            if (blueCircleRadius > 0) {
+                ctx2d.beginPath();
+                ctx2d.arc(centerX, centerY, blueCircleRadius * scale, 0, 2 * Math.PI);
+                ctx2d.fillStyle = 'rgba(0, 100, 255, 0.15)'; // Transparent blue
+                ctx2d.fill();
+                ctx2d.strokeStyle = 'rgba(0, 100, 255, 0.4)'; // Slightly darker blue border
+                ctx2d.lineWidth = 1.5;
+                ctx2d.stroke();
+            }
+
+            // Draw Path of Revolution (Orbit)
+            ctx2d.beginPath();
+            ctx2d.arc(centerX, centerY, R_revolution * scale, 0, 2 * Math.PI);
+            ctx2d.strokeStyle = '#aaa';
+            ctx2d.setLineDash([5, 5]);
+            ctx2d.lineWidth = 1;
+            ctx2d.stroke();
+            ctx2d.setLineDash([]);
+
+            // Draw the Ellipse outline
+            if (points2D.length > 0) {
+                ctx2d.beginPath();
+                ctx2d.lineWidth = 2.5;
+                ctx2d.strokeStyle = 'red';
+                for (let i = 0; i < points2D.length; i++) {
+                    const px = centerX + points2D[i].x * scale;
+                    const py = centerY - points2D[i].y * scale; // Flip Y for canvas
+                    if (i === 0) ctx2d.moveTo(px, py);
+                    else ctx2d.lineTo(px, py);
+                }
+                ctx2d.closePath();
+                ctx2d.stroke();
+
+                // Draw Center Point
+                const pxC = centerX + Xc * scale;
+                const pyC = centerY - Yc * scale;
+                ctx2d.beginPath();
+                ctx2d.arc(pxC, pyC, 4, 0, 2 * Math.PI);
+                ctx2d.fillStyle = 'black';
+                ctx2d.fill();
+
+                // Draw Major Axis line to show rotation clearly
+                ctx2d.beginPath();
+                ctx2d.strokeStyle = 'rgba(0,0,0,0.3)';
+                ctx2d.lineWidth = 1;
+                const tiltDirX = a * Math.cos(theta_rad) * scale;
+                const tiltDirY = a * Math.sin(theta_rad) * scale;
+                ctx2d.moveTo(pxC - tiltDirX, pyC + tiltDirY); // Note flipped Y
+                ctx2d.lineTo(pxC + tiltDirX, pyC - tiltDirY);
+                ctx2d.stroke();
+            }
+        }
+
+        // Attach listeners
+        sTheta.addEventListener('input', updateAll);
+        sAlpha.addEventListener('input', updateAll);
+        sH.addEventListener('input', updateAll);
+        sR.addEventListener('input', updateAll);
+
+        // Initial draw
+        updateAll();
+
+    </script>
+
+</body>
+
+</html>
