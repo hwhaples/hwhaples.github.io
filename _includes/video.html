@@ -1,0 +1,4 @@
+<figure class="video-figure">
+  <div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/{{ include.id | escape }}" title="{{ include.title | escape }}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+  <figcaption>{% if include.caption %}{{ include.caption | escape }} {% endif %}<a href="https://www.youtube.com/watch?v={{ include.id | escape }}">Watch on YouTube ↗</a>{% if include.archive %} · <a href="{{ include.archive | escape }}">Archived video page ↗</a>{% endif %}</figcaption>
+</figure>

@@ -1,13 +1,9 @@
 ---
 layout: page
-title: "404: Page not found"
-permalink: 404.html
+title: Page not found
+eyebrow: '404'
+permalink: /404.html
+noindex: true
 ---
-<img src="/image/uhoh.png" class="center">
-<p>
-  Uh oh! It looks like I've misplaced that URL or it's pointing to something that doesn't 
-  exist. <a href="{{ site.baseurl }}/">Head back home</a> to try finding it 
-  again.
-</p>
-
-
+<p>This page may have moved as the collection has grown.</p>
+<p><a href="{{ '/projects/' | relative_url }}">Explore the projects</a> or <a href="{{ '/' | relative_url }}">head home</a>.</p>

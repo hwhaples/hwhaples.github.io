@@ -1,0 +1,44 @@
+---
+layout: null
+title: Homepage comparison
+permalink: /review/
+noindex: true
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+  <title>Homepage comparison · Hunter Whaples</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f7f5f0;color:#292824;font:15px/1.5 'Segoe UI',Arial,sans-serif}
+    header{padding:20px 28px 16px;border-bottom:1px solid #d7d2c8}h1{font:normal 25px Georgia,serif;margin:0 0 6px}p{margin:0 0 14px;color:#66635b;font-size:13px}
+    nav{display:flex;flex-wrap:wrap;gap:8px}button,a{font:inherit;color:inherit}button{cursor:pointer;border:1px solid #d7d2c8;background:transparent;padding:8px 14px;font-size:13px}button[aria-pressed=true]{background:#773f49;border-color:#773f49;color:white}a{font-size:12px;text-underline-offset:3px}button:focus-visible,a:focus-visible{outline:3px solid #773f49;outline-offset:3px}
+    .review-links{display:flex;flex-wrap:wrap;gap:12px 24px;padding:10px 28px;border-bottom:1px solid #d7d2c8}.review-links a{color:#773f49}.frame-shell{height:calc(100dvh - 203px);min-height:460px}iframe{display:block;width:100%;height:100%;border:0;background:#fff}
+    @media(max-width:600px){header{padding:16px}h1{font-size:22px}.review-links{padding:10px 16px}.frame-shell{height:75dvh}}
+  </style>
+</head>
+<body>
+  <header><h1>Homepage comparison</h1><p>Switch between the original site and two portrait placements. The main homepage still uses the portrait at the top.</p>
+    <nav aria-label="Choose homepage version">
+      <button type="button" data-source="http://127.0.0.1:4001/" aria-pressed="false">Original site</button>
+      <button type="button" data-source="/review/portrait-intro/" aria-pressed="true">Portrait at the top</button>
+      <button type="button" data-source="/review/portrait-context/" aria-pressed="false">Portrait below background</button>
+    </nav>
+  </header>
+  <div class="review-links"><a id="open-version" href="/review/portrait-intro/" target="_blank" rel="noopener">Open this version in its own tab ↗</a><a id="jump-background" href="/review/portrait-intro/#background" target="homepage-version">Jump to “A little context” ↓</a><a href="http://127.0.0.1:4000/">Main local homepage ↗</a></div>
+  <div class="frame-shell"><iframe src="/review/portrait-intro/" name="homepage-version" title="Portrait at the top homepage preview" id="version-frame"></iframe></div>
+  <script>
+    const frame = document.getElementById('version-frame');
+    const openVersion = document.getElementById('open-version');
+    const jump = document.getElementById('jump-background');
+    document.querySelectorAll('button[data-source]').forEach(button => button.addEventListener('click', () => {
+      document.querySelectorAll('button[data-source]').forEach(other => other.setAttribute('aria-pressed', String(other === button)));
+      frame.src = button.dataset.source;
+      frame.title = button.textContent + ' homepage preview';
+      openVersion.href = button.dataset.source;
+      jump.hidden = button.dataset.source.startsWith('http');
+      jump.href = button.dataset.source + '#background';
+    }));
+  </script>
+</body>
+</html>

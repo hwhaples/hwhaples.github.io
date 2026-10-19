@@ -1,0 +1,6 @@
+- title: Cylinder intersections
+  description: Explore how tilt, rotation, radius, and plane height change a cylinder’s elliptical cross-section.
+  thumbnail: /demos/cylinder/thumbnail.svg
+  thumbnail_alt: Diagram of a tilted cylinder crossing a horizontal plane, with an elliptical intersection.
+  url: /demos/cylinder/
+  category: Geometry · Interactive

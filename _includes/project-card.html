@@ -1,0 +1,8 @@
+<article class="project-card">
+  <a class="project-card-link" href="{{ include.project.url | relative_url }}">
+    <div class="project-image"><img src="{{ include.project.cover | relative_url }}" alt="{{ include.project.cover_alt | escape }}" width="1200" height="800" loading="lazy"{% if include.project.cover_position %} style="object-position: {{ include.project.cover_position | escape }}"{% endif %}><span class="image-arrow" aria-hidden="true">↗</span></div>
+    {% assign project_year = include.project.date | date: '%Y' %}<div class="project-meta"><span>{{ include.project.category | default: 'Project' }}</span><span>{{ include.project.date_label | default: project_year }}</span></div>
+    <h3>{{ include.project.title }}</h3>
+    <p>{{ include.project.description }}</p>
+  </a>
+</article>

@@ -1,0 +1,17 @@
+---
+layout: default
+---
+<article class="project-article">
+  <header class="article-header">
+    <a class="back-link" href="{{ '/projects/' | relative_url }}"><span aria-hidden="true">←</span> All projects</a>
+    {% assign project_year = page.date | date: '%Y' %}<p class="eyebrow">{{ page.category | default: 'Project' }} <span aria-hidden="true">/</span> {{ page.date_label | default: project_year }}</p>
+    <h1>{{ page.title }}</h1>
+    <p class="article-deck">{{ page.description }}</p>
+    {% if page.role or page.organization %}<dl class="project-facts">{% if page.role %}<div><dt>My role</dt><dd>{{ page.role }}</dd></div>{% endif %}{% if page.organization %}<div><dt>With</dt><dd>{{ page.organization }}</dd></div>{% endif %}{% if page.period %}<div><dt>When</dt><dd>{{ page.period }}</dd></div>{% endif %}</dl>{% endif %}
+  </header>
+  {% include figure.html src=page.cover alt=page.cover_alt caption=page.cover_caption hero=true contain=page.cover_contain %}
+  <div class="prose article-body">{{ content }}</div>
+  {% if page.papers %}<section class="prose paper-links" aria-labelledby="papers-title"><h2 id="papers-title">Papers &amp; related resources</h2><ul>{% for paper in page.papers %}<li><a href="{{ paper.url | relative_url }}">{{ paper.title }}</a>{% if paper.citation %}<span class="citation">{{ paper.citation }}</span>{% endif %}</li>{% endfor %}</ul></section>{% endif %}
+  {% if page.draft_content %}<p class="draft-note article-draft">Adapted from the previous site. Project text and dates are pending review.</p>{% endif %}
+  <nav class="article-bottom" aria-label="Project navigation"><a href="{{ '/projects/' | relative_url }}">← Back to projects</a><a href="{{ '/demos/' | relative_url }}">Explore the demos →</a></nav>
+</article>

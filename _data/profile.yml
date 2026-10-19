@@ -1,0 +1,27 @@
+name: Hunter Whaples
+email: hunter.whaples@gmail.com
+portrait: /assets/images/hunter-illustrated.png
+portrait_alt: Illustrated portrait of Hunter Whaples.
+eyebrow: Engineering across disciplines
+intro: Understand how things work. Imagine how they might work better.
+bio: >-
+  Engineering problems rarely fit within a single field. I work across
+  materials science, manufacturing, and computation to tackle some of the hardest
+  (and most fun!) challenges in deep tech. 
+background: >-
+  I work as a materials science and engineering PhD candidate at MIT.
+  Before pursuing graduate research, I studied engineering at Harvey Mudd College and 
+  worked on renewable energy projects at Heliogen and HGenium, startups within the Idealab incubator.
+  These experiences shaped what I enjoy most: bringing together different disciplines
+  to build new technologies that challenge what's possible.
+links:
+  - label: Email
+    url: mailto:hunter.whaples@gmail.com
+  - label: GitHub
+    url: https://github.com/hwhaples
+  - label: LinkedIn
+    url: https://www.linkedin.com/in/hunter-whaples/
+  - label: Substack
+    url: https://volumetric3d.substack.com/
+  - label: MIT profile
+    url: https://engineering.mit.edu/people/hunter-whaples

@@ -1,49 +1,9 @@
 ---
 layout: default
-title: projects
+title: Projects
+description: A collection of engineering, research, and hands-on projects.
 ---
-
-{% for project in site.portfolio %}
-
-{% if project.redirect %}
-<div class="project">
-    <div class="thumbnail">
-        <a href="{{ project.redirect }}" target="_blank">
-        {% if project.img %}
-        <img class="thumbnail" src="{{ project.img }}"/>
-        {% else %}
-        <div class="thumbnail blankbox"></div>
-        {% endif %}    
-        <span>
-            <h2 class="overlay">{{ project.title }}</h2>
-            <br/>
-            <p class="overlay">{{ project.description }}</p>
-        </span>
-        </a>
-    </div>
-</div>
-{% else %}
-
-<div class="project ">
-    <div class="thumbnail">
-        <a href="{{ site.baseurl }}{{ project.url }}">
-        {% if project.img %}
-        <img class="thumbnail" src="{{ project.img }}"/>
-        {% else %}
-        <div class="thumbnail blankbox"></div>
-        {% endif %}    
-        <span>
-            <h2 class="overlay">{{ project.title }}</h2>
-            <br/>
-            <p class="overlay">{{ project.description }}</p>
-        </span>
-        </a>
-    </div>
-</div>
-
-{% endif %}
-
-{% endfor %}
-
-<script type="text/javascript" src="/js/lightbox.js"></script>
-<link rel="stylesheet" href="/css/lightbox.css">
+<header class="page-header gallery-header"><p class="eyebrow">Ideas, put into practice</p><h1>Projects<span class="heading-period">.</span></h1><p class="page-description">A collection of engineering, research, and hands-on projects.<br>Some built with teams, some built out of curiosity.</p></header>
+<div class="gallery-topline"><span>Research, prototypes, and earlier work</span><span>{{ site.projects.size }} projects</span></div>
+<div class="project-grid all-projects">{% assign projects = site.projects | sort: 'date' | reverse %}{% for project in projects %}{% include project-card.html project=project %}{% endfor %}</div>
+<aside class="gallery-note"><p>Looking for something interactive?</p><a href="{{ '/demos/' | relative_url }}">Visit the demos <span aria-hidden="true">→</span></a></aside>

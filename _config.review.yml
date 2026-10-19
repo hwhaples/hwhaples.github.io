@@ -1,0 +1,4 @@
+# Local comparison only. Underscore-prefixed review sources are excluded by default.
+# bundle exec jekyll serve --config _config.yml,_config.review.yml --destination .cache/review-site --port 4002
+include:
+  - _reviews

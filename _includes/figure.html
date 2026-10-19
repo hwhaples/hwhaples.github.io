@@ -1,0 +1,4 @@
+<figure class="figure{% if include.hero %} figure-hero{% endif %}{% if include.contain %} figure-contain{% endif %}">
+  <a href="{{ include.src | relative_url }}"><img src="{{ include.src | relative_url }}" alt="{{ include.alt | escape }}"{% unless include.hero %} loading="lazy"{% endunless %}></a>
+  {% if include.caption %}<figcaption>{{ include.caption | markdownify }}</figcaption>{% endif %}
+</figure>

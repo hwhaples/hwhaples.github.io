@@ -1,0 +1,27 @@
+---
+layout: default
+title: Cylinder intersections
+description: Explore the elliptical intersection of a tilted cylinder and a horizontal plane.
+demo: true
+math: true
+---
+<header class="demo-header"><a class="back-link" href="{{ '/demos/' | relative_url }}">← All demos</a><p class="eyebrow">Geometry / Interactive experiment</p><h1>Cylinder intersections.</h1><p>A cylinder, a plane, and the ellipse where they meet. Adjust the controls to see how the cross-section moves and changes shape.</p></header>
+<section class="demo-workspace" aria-label="Cylinder intersection controls and views">
+  <div class="control-group">
+    <div class="slider-control"><label for="thetaSlider">Global rotation (θ)<span class="slider-readout"><span id="thetaVal">0</span>°</span></label><input type="range" id="thetaSlider" min="0" max="360" value="0" step="1"></div>
+    <div class="slider-control"><label for="alphaSlider">Cylinder tilt (α)<span class="slider-readout"><span id="alphaVal">30</span>°</span></label><input type="range" id="alphaSlider" min="1" max="75" value="30" step="1"></div>
+    <div class="slider-control"><label for="hSlider">Plane height (h)<span class="slider-readout"><span id="hVal">5.0</span> units</span></label><input type="range" id="hSlider" min="1" max="15" value="5" step="0.1"></div>
+    <div class="slider-control"><label for="rSlider">Cylinder radius (r)<span class="slider-readout"><span id="rVal">2.0</span> units</span></label><input type="range" id="rSlider" min="0.5" max="5" value="2" step="0.1"></div>
+    <div class="math-display" aria-live="polite" aria-atomic="true"><span>Center (X<sub>c</sub>, Y<sub>c</sub>): (<span id="xcVal">0.00</span>, <span id="ycVal">0.00</span>)</span><span>Semi-major axis (a): <span id="aVal">0.00</span></span><span>Semi-minor axis (b): <span id="bVal">0.00</span></span></div>
+  </div>
+  <p id="demo-status" class="demo-status" role="status" hidden></p>
+  <noscript><p>This experiment needs JavaScript. The equations below describe the intersection.</p></noscript>
+  <div class="vis-container">
+    <div class="canvas-wrapper"><div class="canvas-label">01 / Cylinder &amp; plane</div><div id="canvas3d_container" role="img" aria-label="Three-dimensional view of the cylinder and horizontal plane" aria-describedby="demo-description"></div></div>
+    <div class="canvas-wrapper"><div class="canvas-label">02 / Top view &amp; orbit</div><canvas id="canvas2d" role="img" aria-label="Top view of the elliptical intersection and its orbit" aria-describedby="demo-description">The ellipse’s center and semi-axis lengths are listed above.</canvas></div>
+  </div>
+  <button class="demo-reset" id="reset-demo" type="button">Reset controls ↺</button>
+</section>
+<section class="prose demo-explanation" id="demo-description"><h2>What am I looking at?</h2><p>The intersection of a tilted circular cylinder and a horizontal plane is an ellipse. Increasing the tilt stretches its major axis; raising the plane moves its center away from the origin. Global rotation turns the ellipse and its orbit together.</p><p>For a cylinder of radius \(r\), tilted by \(\alpha\) from vertical, the semi-axis lengths are:</p>\[a = \frac{r}{\cos\alpha}, \qquad b = r.\]<p>At plane height \(h\), the center follows a circle of radius \(h\tan\alpha\):</p>\[X_c = h\tan\alpha\cos\theta, \qquad Y_c = h\tan\alpha\sin\theta.\]<p>The dashed circle shows that orbit. When present, the shaded blue disk in the top view has radius \(r-h\tan\alpha\).</p></section>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script defer src="{{ '/demos/cylinder/cylinder.js' | relative_url }}"></script>

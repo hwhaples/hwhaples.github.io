@@ -1,0 +1,8 @@
+---
+layout: default
+title: Demos
+description: Small interactive tools for exploring geometry, systems, and ideas.
+---
+<header class="page-header"><p class="eyebrow">An idea you can play with</p><h1>Demos<span class="heading-period">.</span></h1><p class="page-description">Small interactive tools for exploring geometry, systems, and ideas. Open an experiment and move things around.</p></header>
+<div class="gallery-topline"><span>Interactive experiments</span><span>{{ site.data.demos.size }} {% if site.data.demos.size == 1 %}demo{% else %}demos{% endif %}</span></div>
+<div class="project-grid demo-grid">{% for demo in site.data.demos %}<article class="project-card"><a class="project-card-link" href="{{ demo.url | relative_url }}"><div class="project-image"><img src="{{ demo.thumbnail | relative_url }}" alt="{{ demo.thumbnail_alt | escape }}" width="1200" height="800" loading="lazy"><span class="image-arrow" aria-hidden="true">↗</span></div><div class="project-meta"><span>{{ demo.category }}</span><span>Interactive</span></div><h3>{{ demo.title }}</h3><p>{{ demo.description }}</p></a></article>{% endfor %}</div>
